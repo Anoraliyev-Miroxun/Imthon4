@@ -5,9 +5,10 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { AsseccRole } from 'src/common/decorator/roles.decarators';
 import { RolesGuard } from 'src/common/guard/role-guard';
 import { AuthGuard } from 'src/common/guard/auth-guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/enum/role-enum';
 
+@ApiTags("Book")
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService) { }

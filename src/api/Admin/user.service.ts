@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,6 +31,31 @@ export class UserService extends BaseService<
   ) {
     super(userRepo);
   }
+
+
+  async onModuleInit(): Promise<void> {
+    try {
+      const existsSuperadmin = await this.userRepo.findOne({
+        where: { role: Roles.ADMIN },
+      });
+      const hashedPassword = await this.crypto.encrypt("Eshmat123!");
+      if (!existsSuperadmin) {
+        const superadmin = this.userRepo.create({
+          full_name:"Eshmat1",
+          password:hashedPassword,
+          role:Roles.ADMIN,
+          email:"eshmat@gmail.com"
+        });
+        await this.userRepo.save(superadmin);
+        console.log('first admin created successfully');
+      }
+    } catch (error) {
+      throw new InternalServerErrorException('Error on creaeting super admin');
+
+    }
+  }
+
+  
   async createUser(createUserDto: CreateUserDto) {
     const { password: pass, email, role, ...rest } = createUserDto;
     const rols = Roles.ADMIN;
@@ -73,8 +99,8 @@ export class UserService extends BaseService<
   }
 
   async singin(signInDto: CreateUserDto, res: Response) {
-    const { email, password } = signInDto;
-    const admin = await this.userRepo.findOne({ where: { email } });
+    const { full_name, password } = signInDto;
+    const admin = await this.userRepo.findOne({ where: { full_name } });
     const isMatchPassword = await this.crypto.decrypt(
       password,
       admin?.password || '',

@@ -4,8 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-oquvchi.dto';
-import { UpdateUserDto } from './dto/update-oquvchi.dto';
+import { CreateOquvchiDto } from './dto/create-oquvchi.dto';
+import { UpdateOquvchiDto } from './dto/update-oquvchi.dto';
 import { BaseService } from 'src/infrastructure/base/base-service';
 import { User } from 'src/core/entity/user-entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,8 +19,8 @@ import { Response } from 'express';
 
 @Injectable()
 export class UserService extends BaseService<
-  CreateUserDto,
-  UpdateUserDto,
+  CreateOquvchiDto,
+  UpdateOquvchiDto,
   User
 > {
   constructor(
@@ -30,8 +30,8 @@ export class UserService extends BaseService<
   ) {
     super(userRepo);
   }
-  async createUser(createUserDto: CreateUserDto) {
-    const { password: pass, email, role, ...rest } = createUserDto;
+  async createUser(CreateOquvchiDto: CreateOquvchiDto) {
+    const { password: pass, email, role, ...rest } = CreateOquvchiDto;
     const rols = Roles.OQUVCHI;
     const existEmail = await this.userRepo.findOne({ where: { email } });
     if (existEmail) {
@@ -41,8 +41,8 @@ export class UserService extends BaseService<
     super.create({ ...rest, password, email, role: rols });
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto) {
-    const { password, email, role, ...rest } = updateUserDto;
+  async updateUser(id: number, UpdateOquvchiDto: UpdateOquvchiDto) {
+    const { password, email, role, ...rest } = UpdateOquvchiDto;
     const admin = await this.userRepo.findOne({ where: { id } });
     if (email) {
       const existEmail = await this.userRepo.findOne({ where: { email } });
@@ -72,9 +72,9 @@ export class UserService extends BaseService<
     return this.delete(id);
   }
 
-  async singin(signInDto: CreateUserDto, res: Response) {
-    const { email, password } = signInDto;
-    const admin = await this.userRepo.findOne({ where: { email } });
+  async singin(signInDto: CreateOquvchiDto, res: Response) {
+    const { full_name, password } = signInDto;
+    const admin = await this.userRepo.findOne({ where: { full_name } });
     const isMatchPassword = await this.crypto.decrypt(
       password,
       admin?.password || '',

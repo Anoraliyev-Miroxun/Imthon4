@@ -4,8 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-kutubxonachi.dto';
-import { UpdateUserDto } from './dto/update-kutubxonachi.dto';
+import { CreateKutubxonachiDto } from './dto/create-kutubxonachi.dto';
+import { UpdateKutubxonachiDto } from './dto/update-kutubxonachi.dto';
 import { BaseService } from 'src/infrastructure/base/base-service';
 import { User } from 'src/core/entity/user-entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,8 +19,8 @@ import { Response } from 'express';
 
 @Injectable()
 export class UserService extends BaseService<
-  CreateUserDto,
-  UpdateUserDto,
+  CreateKutubxonachiDto,
+  UpdateKutubxonachiDto,
   User
 > {
   constructor(
@@ -30,8 +30,8 @@ export class UserService extends BaseService<
   ) {
     super(userRepo);
   }
-  async createUser(createUserDto: CreateUserDto) {
-    const { password: pass, email, role, ...rest } = createUserDto;
+  async createUser(createKutubxonachiDto: CreateKutubxonachiDto) {
+    const { password: pass, email, role, ...rest } = createKutubxonachiDto;
     const rols = Roles.KUTUBXONACHI;
     const existEmail = await this.userRepo.findOne({ where: { email } });
     if (existEmail) {
@@ -41,7 +41,7 @@ export class UserService extends BaseService<
     super.create({ ...rest, password, email, role: rols });
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+  async updateUser(id: number, updateUserDto: UpdateKutubxonachiDto) {
     const { password, email, role, ...rest } = updateUserDto;
     const admin = await this.userRepo.findOne({ where: { id } });
     if (email) {
@@ -72,9 +72,9 @@ export class UserService extends BaseService<
     return this.delete(id);
   }
 
-  async singin(signInDto: CreateUserDto, res: Response) {
-    const { email, password } = signInDto;
-    const admin = await this.userRepo.findOne({ where: { email } });
+  async singin(signInDto: CreateKutubxonachiDto, res: Response) {
+    const { full_name, password } = signInDto;
+    const admin = await this.userRepo.findOne({ where: { full_name } });
     const isMatchPassword = await this.crypto.decrypt(
       password,
       admin?.password || '',

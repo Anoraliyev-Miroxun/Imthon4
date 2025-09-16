@@ -2,12 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { BorrowService } from './borrow.service';
 import { CreateBorrowDto } from './dto/create-borrow.dto';
 import { UpdateBorrowDto } from './dto/update-borrow.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AsseccRole } from 'src/common/decorator/roles.decarators';
 import { AuthGuard } from 'src/common/guard/auth-guard';
 import { RolesGuard } from 'src/common/guard/role-guard';
 import { Roles } from 'src/common/enum/role-enum';
 
+@ApiTags("Borrow")
 @Controller('borrow')
 export class BorrowController {
   constructor(private readonly borrowService: BorrowService) { }

@@ -15,10 +15,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/common/guard/auth-guard';
 import { RolesGuard } from 'src/common/guard/role-guard';
 import { Roles } from 'src/common/enum/role-enum';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AsseccRole } from 'src/common/decorator/roles.decarators';
 import type { Response } from 'express';
 
+@ApiTags("Admin")
 @Controller('Admin')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -27,8 +28,8 @@ export class UserController {
   @AsseccRole(Roles.ADMIN)
   @Post()
   @ApiBearerAuth()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  create(@Body() userCreateDto:CreateUserDto ) {
+    return this.userService.createUser(userCreateDto);
   }
 
   @Post('signin')

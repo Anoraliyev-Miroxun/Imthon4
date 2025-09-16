@@ -25,7 +25,7 @@ export class BorrowController {
   @Get()
   @ApiBearerAuth()
   findAll() {
-    return this.borrowService.findAll();
+    return this.borrowService.findAll({relations:{book:true,user:true}});
   }
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -33,7 +33,7 @@ export class BorrowController {
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
-    return this.borrowService.findOne(+id);
+    return this.borrowService.getById(+id);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -49,6 +49,6 @@ export class BorrowController {
   @Delete(":id")
   @ApiBearerAuth()
   remove(@Param('id') id: string) {
-    return this.borrowService.remove(+id);
+    return this.borrowService.delete(+id);
   }
 }

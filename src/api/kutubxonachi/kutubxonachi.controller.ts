@@ -10,15 +10,16 @@ import {
   Res,
 } from '@nestjs/common';
 import { UserService } from './kutubxonachi.service';
-import { CreateUserDto } from './dto/create-kutubxonachi.dto';
-import { UpdateUserDto } from './dto/update-kutubxonachi.dto';
+import { CreateKutubxonachiDto } from './dto/create-kutubxonachi.dto';
+import { UpdateKutubxonachiDto } from './dto/update-kutubxonachi.dto';
 import { AuthGuard } from 'src/common/guard/auth-guard';
 import { RolesGuard } from 'src/common/guard/role-guard';
 import { Roles } from 'src/common/enum/role-enum';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AsseccRole } from 'src/common/decorator/roles.decarators';
 import type { Response } from 'express';
 
+@ApiTags("Kutubxonachi")
 @Controller('Kutubxonachi')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -27,13 +28,13 @@ export class UserController {
   @AsseccRole(Roles.ADMIN)
   @Post()
   @ApiBearerAuth()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  create(@Body() createKutubxonachiDto:CreateKutubxonachiDto ) {
+    return this.userService.createUser(createKutubxonachiDto);
   }
 
   @Post('signin')
   signin(
-    @Body() signInDto: CreateUserDto,
+    @Body() signInDto: CreateKutubxonachiDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.userService.singin(signInDto, res);
@@ -62,7 +63,7 @@ export class UserController {
   @AsseccRole(Roles.ADMIN,'ID')
   @Patch(':id')
   @ApiBearerAuth()
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateKutubxonachiDto) {
     return this.userService.updateUser(+id, updateUserDto);
   }
 

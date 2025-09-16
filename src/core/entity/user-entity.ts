@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { Borrow } from './barrow-entity';
 import { History } from './history-entity';
 
-@Entity('user')
+@Entity('users')
 export class User extends BaseEntity {
   @Column({ type: 'varchar' })
   full_name: string;
